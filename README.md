@@ -1,1 +1,1 @@
-# implementation_async_api_sprint_1
+Описание индекса для Elasticsearch находится в файле es_index_movies.json
