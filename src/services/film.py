@@ -1,5 +1,5 @@
 from functools import lru_cache
-from typing import Optional
+from typing import Optional, List
 
 from aioredis import Redis
 from elasticsearch import AsyncElasticsearch, NotFoundError
@@ -27,9 +27,45 @@ class FilmService:
 
         return film
 
+    async def get_film_list(self, sort: str = None, sort_desc: str = None, filters_should: dict = None) -> List[Film]:
+        filter_fields = filters_should.keys() if filters_should else []
+        nested_id_query_body = {
+            "query": {
+                "bool": {
+                    "must": [
+                        {
+                            "nested": {
+                                "path": field,
+                                "query": {
+                                    "bool": {
+                                        "should": [
+                                            {
+                                                "match": {f"{field}.id": field_value}
+                                            } for field_value in filters_should[field]
+                                        ]
+                                    }
+                                }
+                            }
+                        } for field in filter_fields
+                    ]
+                }
+            }
+        } if filters_should else None
+        film_list = await self._get_film_list_by_strict_search(query_body=nested_id_query_body)
+        # print(film_list)
+        return film_list
+
+    async def _get_film_list_by_strict_search(self, query_body) -> List[Film]:
+        try:
+            film_list = await self.elastic.search(index="movies", body=query_body)
+            print(film_list["hits"]["hits"])
+        except NotFoundError:
+            return []
+        return list(map(lambda x: Film(**x["_source"]), film_list["hits"]["hits"]))
+
     async def _get_film_from_elastic(self, film_id: str) -> Optional[Film]:
         try:
-            doc = await self.elastic.get('movies', film_id)
+            doc = await self.elastic.get("movies", film_id)
         except NotFoundError:
             return None
         return Film(**doc['_source'])
