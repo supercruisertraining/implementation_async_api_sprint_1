@@ -27,9 +27,12 @@ class FilmService:
 
         return film
 
-    async def get_film_list(self, sort: str = None, sort_desc: str = None, filters_should: dict = None) -> List[Film]:
+    async def get_film_list(self, page_size: int, page_number: int,
+                            sort_rule: dict = None, filters_should: dict = None) -> List[Film]:
+        query_body = {}
+        query_body.update({"size": page_size, "from": (page_number - 1)*page_size})
         filter_fields = filters_should.keys() if filters_should else []
-        nested_id_query_body = {
+        nested_search_by_id_query = {
             "query": {
                 "bool": {
                     "must": [
@@ -50,15 +53,16 @@ class FilmService:
                     ]
                 }
             }
-        } if filters_should else None
-        film_list = await self._get_film_list_by_strict_search(query_body=nested_id_query_body)
-        # print(film_list)
+        } if filters_should else dict()
+        query_body.update(nested_search_by_id_query)
+        if sort_rule:
+            query_body.update({"sort": {sort_rule["field"]: {"order": "desc" if sort_rule["desc"] else "asc"}}})
+        film_list = await self._get_film_list_by_strict_search(query_body=query_body)
         return film_list
 
     async def _get_film_list_by_strict_search(self, query_body) -> List[Film]:
         try:
             film_list = await self.elastic.search(index="movies", body=query_body)
-            print(film_list["hits"]["hits"])
         except NotFoundError:
             return []
         return list(map(lambda x: Film(**x["_source"]), film_list["hits"]["hits"]))

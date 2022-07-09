@@ -62,13 +62,15 @@ async def get_film_list(film_service: FilmService = Depends(get_film_service),
                         page_size: int = Query(default=50, alias="page[size]"),
                         filter_genre: Union[List[str], None] = Query(default=None, alias="filter[genre]"),
                         sort: str = Query(default=None)):
-    sort_desc = None
+    sort_rule = None
     if sort:
         if str(sort).startswith("-"):
-            sort_desc = sort
-            sort = None
+            sort_rule = {"field": sort[1:], "desc": True}
+        else:
+            sort_rule = {"field": sort, "desc": False}
     filters_should = None
     if filter_genre:
         filters_should = {"genres": filter_genre}
-    films = await film_service.get_film_list(sort=sort, sort_desc=sort_desc, filters_should=filters_should)
+    films = await film_service.get_film_list(page_size=page_size, page_number=page_number,
+                                             sort_rule=sort_rule,  filters_should=filters_should)
     return list(map(lambda x: FilmInList(id=x.id, title=x.title, rating=x.rating), films))
