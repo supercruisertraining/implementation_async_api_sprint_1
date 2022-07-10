@@ -2,7 +2,7 @@ from datetime import datetime
 
 
 def fetch_100_modified_movies(last_id: str, last_process_datetime: datetime) -> str:
-    query = """
+    return """
     SELECT
         f_w.id,
         f_w.title,
@@ -26,7 +26,32 @@ def fetch_100_modified_movies(last_id: str, last_process_datetime: datetime) -> 
     """.format(
         id_=last_id, last_datetime_=last_process_datetime
     )
-    return query
+
+
+def fetch_100_modified_genres(last_id: str, last_process_datetime: datetime) -> str:
+    return """
+    SELECT id, name, description
+    FROM content.genre
+    WHERE id > '{id_}'
+    AND modified > '{last_datetime_}'
+    ORDER BY id
+    LIMIT 100;
+    """.format(
+        id_=last_id, last_datetime_=last_process_datetime
+    )
+
+
+def fetch_100_modified_persons(last_id: str, last_process_datetime: datetime) -> str:
+    return """
+    SELECT id, full_name
+    FROM content.person
+    WHERE id > '{id_}'
+    AND modified > '{last_datetime_}'
+    ORDER BY id
+    LIMIT 100;
+    """.format(
+        id_=last_id, last_datetime_=last_process_datetime
+    )
 
 
 def fetch_persons(film_work_id: str) -> str:

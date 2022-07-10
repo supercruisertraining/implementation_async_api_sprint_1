@@ -4,7 +4,8 @@ from typing import Union
 import psycopg2
 from psycopg2.extras import RealDictCursor
 
-from etl.postgres_to_es.data_consumer.sql_film_work import fetch_100_modified_movies, fetch_persons, get_genre
+from etl.postgres_to_es.data_consumer.sql_film_work import fetch_100_modified_movies, fetch_100_modified_genres, \
+    fetch_100_modified_persons, fetch_persons, get_genre
 from etl.postgres_to_es.utils.backoff import backoff
 from etl.state.state_manager import State
 
@@ -24,9 +25,9 @@ class PostgresLoader:
             if self.index_name == "movies":
                 query = fetch_100_modified_movies(last_id=last_id, last_process_datetime=last_process_datetime)
             elif self.index_name == "genres":
-                pass
+                query = fetch_100_modified_genres(last_id=last_id, last_process_datetime=last_process_datetime)
             elif self.index_name == "persons":
-                pass
+                query = fetch_100_modified_persons(last_id=last_id, last_process_datetime=last_process_datetime)
             else:
                 raise Exception("Unknown data type")
             with pg_conn.cursor() as cur:
