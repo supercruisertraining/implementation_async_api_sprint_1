@@ -2,9 +2,9 @@ import uuid
 from abc import abstractmethod
 from datetime import datetime
 from typing import Union
-
-from config.settings import redis_host
 from redis import Redis
+
+from etl.config.settings import redis_host
 
 
 class BaseStateProvider:

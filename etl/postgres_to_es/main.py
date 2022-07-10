@@ -1,3 +1,4 @@
+import sys
 import time
 from datetime import datetime
 
@@ -7,7 +8,7 @@ from etl.postgres_to_es.data_consumer.data_consumer import PostgresLoader
 from etl.postgres_to_es.data_pusher.data_pusher import ESPusher
 from etl.state.state_manager import State
 
-index_name = "movies"
+index_name = sys.argv[1]
 
 state_adapter = State()
 pg_client = PostgresLoader(index_name=index_name, dsn=dsn, state_adapter=state_adapter)
