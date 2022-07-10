@@ -40,9 +40,9 @@ class PostgresLoader:
                 if self.index_name == "movies":
                     current_data = self._film_work_process(result_data_element, pg_conn)
                 elif self.index_name == "genres":
-                    pass
+                    current_data = self._genre_process(result_data_element, pg_conn)
                 elif self.index_name == "persons":
-                    pass
+                    current_data = self._person_processor(result_data_element, pg_conn)
                 result_list.append(current_data)
 
             return result_list
@@ -82,5 +82,5 @@ class PostgresLoader:
     def _person_processor(self, data_element, pg_conn=None):
         return {
             "id": str(data_element["id"]),
-            "full_name": data_element["name"],
+            "full_name": data_element["full_name"],
         }
