@@ -1,7 +1,12 @@
 from pydantic import BaseModel
 
 
-class Genre(BaseModel):
+class GenreDetail(BaseModel):
     id: str
     name: str
     description: str
+
+
+class Genre(BaseModel):
+    id: str
+    name: str
