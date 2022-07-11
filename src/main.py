@@ -8,7 +8,6 @@ from fastapi.responses import ORJSONResponse
 
 from api.v1 import films, genres
 from core import config
-from core.logger import LOGGING
 from db import elastic, redis
 
 app = FastAPI(

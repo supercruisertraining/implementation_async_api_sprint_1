@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, List
 from functools import lru_cache
 
 from fastapi import Depends
@@ -26,9 +26,8 @@ class GenreService:
             return None
         return GenreDetail(**doc["_source"])
 
-    async def get_genre_list(self):
+    async def get_genre_list(self) -> List[Genre]:
         genres_from_es = await self.elastic.search(index="genres")
-        print(genres_from_es)
         return list(map(lambda x: Genre(**x["_source"]), genres_from_es["hits"]["hits"]))
 
 
