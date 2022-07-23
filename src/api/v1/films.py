@@ -6,37 +6,9 @@ from fastapi import APIRouter, Depends, HTTPException, Query
 from pydantic import BaseModel
 
 from services.film import FilmService, get_film_service
+from api.v1.schemas import GenreInFilmDetail, PersonInFilmDetail, FilmDetail, FilmInList
 
 router = APIRouter()
-
-
-class GenreInFilmDetail(BaseModel):
-    id: str
-    name: str
-
-
-class PersonInFilmDetail(BaseModel):
-    id: str
-    full_name: str
-
-
-class FilmDetail(BaseModel):
-    id: str
-    title: str
-    rating: float
-    description: str
-    creation_date: datetime.date
-    genres: List[GenreInFilmDetail]
-
-    actors: List[PersonInFilmDetail]
-    writers: List[PersonInFilmDetail]
-    directors: List[PersonInFilmDetail]
-
-
-class FilmInList(BaseModel):
-    id: str
-    title: str
-    rating: float
 
 
 @router.get('/{film_uuid}', response_model=FilmDetail)

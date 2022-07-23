@@ -1,6 +1,6 @@
-from pydantic import BaseModel
+from utils.schemas import BaseOrjsonModel
 
 
-class Person(BaseModel):
+class Person(BaseOrjsonModel):
     id: str
     full_name: str

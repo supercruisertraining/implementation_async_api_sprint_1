@@ -2,16 +2,11 @@ from http import HTTPStatus
 from typing import List
 
 from fastapi import APIRouter, Depends, HTTPException, Query
-from pydantic import BaseModel
 
 from services.person import PersonService, get_person_service
+from api.v1.schemas import Person
 
 router = APIRouter()
-
-
-class Person(BaseModel):
-    id: str
-    full_name: str
 
 
 @router.get("/{genre_uuid}", response_model=Person)
