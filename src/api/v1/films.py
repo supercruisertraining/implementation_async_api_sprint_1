@@ -3,10 +3,9 @@ from http import HTTPStatus
 from typing import List, Union
 
 from fastapi import APIRouter, Depends, HTTPException, Query
-from pydantic import BaseModel
 
 from services.film import FilmService, get_film_service
-from api.v1.schemas import GenreInFilmDetail, PersonInFilmDetail, FilmDetail, FilmInList
+from api.v1.schemas import FilmDetail, FilmInList
 
 router = APIRouter()
 
@@ -16,16 +15,7 @@ async def film_details(film_uuid: str, film_service: FilmService = Depends(get_f
     film = await film_service.get_by_id(film_uuid)
     if not film:
         raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail='film not found')
-    return FilmDetail(id=film.id,
-                      title=film.title,
-                      rating=film.rating,
-                      description=film.description,
-                      creation_date=film.creation_date,
-                      genres=film.genres,
-                      actors=film.actors,
-                      writers=film.writers,
-                      directors=film.directors
-                      )
+    return FilmDetail(**film.dict())
 
 
 @router.get("/", response_model=List[FilmInList])
