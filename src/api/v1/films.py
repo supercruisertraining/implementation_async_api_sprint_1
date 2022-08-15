@@ -1,4 +1,3 @@
-import datetime
 from http import HTTPStatus
 from typing import List, Union
 
@@ -6,6 +5,7 @@ from fastapi import APIRouter, Depends, HTTPException, Query
 
 from services.film import FilmService, get_film_service
 from api.v1.schemas import FilmDetail, FilmInList
+from api.v1.messages import FILM_NOT_FOUND_MESSAGE
 
 router = APIRouter()
 
@@ -14,7 +14,7 @@ router = APIRouter()
 async def film_details(film_uuid: str, film_service: FilmService = Depends(get_film_service)) -> FilmDetail:
     film = await film_service.get_by_id(film_uuid)
     if not film:
-        raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail='film not found')
+        raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail=FILM_NOT_FOUND_MESSAGE)
     return FilmDetail(**film.dict())
 
 

@@ -5,15 +5,16 @@ from fastapi import APIRouter, Depends, HTTPException, Query
 
 from services.person import PersonService, get_person_service
 from api.v1.schemas import Person
+from api.v1.messages import PERSON_NOT_FOUND_MESSAGE
 
 router = APIRouter()
 
 
-@router.get("/{genre_uuid}", response_model=Person)
+@router.get("/{person_uuid}", response_model=Person)
 async def get_person_by_id(person_uuid: str, person_service: PersonService = Depends(get_person_service)):
     person_info = await person_service.get_person_by_id(person_uuid)
     if not person_info:
-        raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="Such genre not found")
+        raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail=PERSON_NOT_FOUND_MESSAGE)
     return Person(id=person_info.id, name=person_info.full_name)
 
 
