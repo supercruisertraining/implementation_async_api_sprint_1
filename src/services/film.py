@@ -105,7 +105,17 @@ class FilmService:
 
     def _cook_cache_key(self, page_number: int, page_size: int,
                         sort_rule: Optional[dict], filters_should: Optional[dict]) -> str:
-        return f"{self.name}_{page_number}_{page_size}_{sort_rule}_{filters_should}"
+        source_dict = {"page_number": page_number, "page_size": page_size}
+        if isinstance(sort_rule, dict):
+            for key in sort_rule.keys():
+                source_dict.update({key: sort_rule[key]})
+
+        if isinstance(filters_should, dict):
+            for key in filters_should.keys():
+                source_dict.update({key: filters_should[key]})
+        source_dict_keys = list(source_dict.keys())
+        source_dict_keys.sort()
+        return f"{self.name}::" + "::".join(f"{key}:{source_dict[key]}" for key in source_dict_keys)
 
 
 @lru_cache()
