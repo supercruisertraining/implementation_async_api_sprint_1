@@ -2,8 +2,8 @@ from urllib.parse import urljoin
 
 import requests
 
-from etl.postgres_to_es.utils.backoff import backoff
-from etl.state.state_manager import State
+from postgres_to_es.utils.backoff import backoff
+from state.state_manager import State
 
 
 class ESPusher:

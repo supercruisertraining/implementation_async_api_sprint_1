@@ -4,10 +4,10 @@ from typing import Union
 import psycopg2
 from psycopg2.extras import RealDictCursor
 
-from etl.postgres_to_es.data_consumer.sql_film_work import fetch_100_modified_movies, fetch_100_modified_genres, \
+from postgres_to_es.data_consumer.sql_film_work import fetch_100_modified_movies, fetch_100_modified_genres, \
     fetch_100_modified_persons, fetch_persons, get_genre
-from etl.postgres_to_es.utils.backoff import backoff
-from etl.state.state_manager import State
+from postgres_to_es.utils.backoff import backoff
+from state.state_manager import State
 
 
 class PostgresLoader:

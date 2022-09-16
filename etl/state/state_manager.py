@@ -4,7 +4,7 @@ from datetime import datetime
 from typing import Union
 from redis import Redis
 
-from etl.config.settings import redis_host
+from config.settings import redis_host
 
 
 class BaseStateProvider:

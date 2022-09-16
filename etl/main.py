@@ -2,11 +2,11 @@ import sys
 import time
 from datetime import datetime
 
-from etl.config.settings import dsn, es_settings
+from config.settings import dsn, es_settings
 
-from etl.postgres_to_es.data_consumer.data_consumer import PostgresLoader
-from etl.postgres_to_es.data_pusher.data_pusher import ESPusher
-from etl.state.state_manager import State
+from postgres_to_es.data_consumer.data_consumer import PostgresLoader
+from postgres_to_es.data_pusher.data_pusher import ESPusher
+from state.state_manager import State
 
 index_name = sys.argv[1]
 

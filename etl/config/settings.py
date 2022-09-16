@@ -1,8 +1,5 @@
 import os
 
-from dotenv import load_dotenv
-
-load_dotenv()
 dsn = {
     "dbname": os.environ.get("DB_NAME"),
     "user": os.environ.get("DB_USER"),
