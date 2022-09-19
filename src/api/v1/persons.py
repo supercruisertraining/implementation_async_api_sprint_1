@@ -10,7 +10,7 @@ from api.v1.messages import PERSON_NOT_FOUND_MESSAGE
 router = APIRouter()
 
 
-@router.get("/{person_uuid}", response_model=Person)
+@router.get("/{person_uuid}", response_model=Person, summary="Get person info")
 async def get_person_by_id(person_uuid: str, person_service: PersonService = Depends(get_person_service)):
     person_info = await person_service.get_person_by_id(person_uuid)
     if not person_info:
@@ -18,7 +18,7 @@ async def get_person_by_id(person_uuid: str, person_service: PersonService = Dep
     return Person(id=person_info.id, name=person_info.full_name)
 
 
-@router.get("/", response_model=List[Person])
+@router.get("/", response_model=List[Person], summary="Get persons list")
 async def get_person_list(person_service: PersonService = Depends(get_person_service),
                           sort: str = Query(default=None),
                           page_number: int = Query(default=1, alias="page[number]"),

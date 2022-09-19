@@ -10,7 +10,7 @@ from api.v1.messages import GENRE_NOT_FOUND_MESSAGE
 router = APIRouter()
 
 
-@router.get("/{genre_uuid}", response_model=GenreDetail)
+@router.get("/{genre_uuid}", response_model=GenreDetail, summary="Get info about genre")
 async def get_genre_by_id(genre_uuid: str, genre_service: GenreService = Depends(get_genre_service)):
     genre_info = await genre_service.get_genre_by_id(genre_uuid)
     if not genre_info:
@@ -18,7 +18,7 @@ async def get_genre_by_id(genre_uuid: str, genre_service: GenreService = Depends
     return GenreDetail(id=genre_info.id, name=genre_info.name, description=genre_info.description)
 
 
-@router.get("/", response_model=List[GenreInList])
+@router.get("/", response_model=List[GenreInList], summary="Get genres list")
 async def get_genre_list(genre_service: GenreService = Depends(get_genre_service)):
     genre_list = await genre_service.get_genre_list()
     return list(map(lambda x: GenreInList(id=x.id, name=x.name), genre_list))

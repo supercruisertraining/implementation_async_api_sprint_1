@@ -10,7 +10,7 @@ from api.v1.messages import FILM_NOT_FOUND_MESSAGE
 router = APIRouter()
 
 
-@router.get('/{film_uuid}', response_model=FilmDetail)
+@router.get('/{film_uuid}', response_model=FilmDetail, summary="Get film detail info")
 async def film_details(film_uuid: str, film_service: FilmService = Depends(get_film_service)) -> FilmDetail:
     film = await film_service.get_by_id(film_uuid)
     if not film:
@@ -18,7 +18,7 @@ async def film_details(film_uuid: str, film_service: FilmService = Depends(get_f
     return FilmDetail(**film.dict())
 
 
-@router.get("/", response_model=List[FilmInList])
+@router.get("/", response_model=List[FilmInList], summary="Get films list")
 async def get_film_list(film_service: FilmService = Depends(get_film_service),
                         page_number: int = Query(default=1, alias="page[number]"),
                         page_size: int = Query(default=50, alias="page[size]"),
