@@ -31,6 +31,31 @@ class FilmService:
 
         return film
 
+    async def search_films(self, search_query, page_size: int, page_number: int) -> List[Film]:
+        query_body = {"query": {
+            "bool": {
+                "should": [
+                    {"match": {"title": {"query": search_query, "fuzziness": "auto"}}},
+                    {"match": {"description": {"query": search_query, "fuzziness": "1"}}},
+                    {"nested": {
+                        "path": "actors",
+                        "query": {
+                            "match": {
+                                "actors.full_name": {
+                                    "query": search_query,
+                                    "fuzziness": "2"}
+                            }
+                        }
+                    }
+                    }
+                ]
+            }
+        }
+        }
+        query_body.update({"size": page_size, "from": (page_number - 1) * page_size})
+        film_list = await self._get_film_list_by_search(query_body=query_body)
+        return film_list
+
     async def get_film_list(self, page_size: int, page_number: int,
                             sort_rule: dict = None, filters_should: dict = None) -> List[Film]:
         query_body = {}
@@ -67,12 +92,12 @@ class FilmService:
         cache_key = self._cook_cache_key(page_number, page_size, sort_rule, filters_should)
         film_list = await self._get_film_list_from_cache(cache_key)
         if not film_list:
-            film_list = await self._get_film_list_by_strict_search(query_body=query_body)
+            film_list = await self._get_film_list_by_search(query_body=query_body)
             if film_list:
                 await self._put_data_to_cache(field=cache_key, value=json.dumps([x.json() for x in film_list]))
         return film_list
 
-    async def _get_film_list_by_strict_search(self, query_body) -> List[Film]:
+    async def _get_film_list_by_search(self, query_body) -> List[Film]:
         try:
             film_list = await self.elastic.search(index="movies", body=query_body)
         except NotFoundError:
