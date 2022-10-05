@@ -34,6 +34,13 @@ class FilmInList(BaseOrjsonModel):
     rating: float
 
 
+class FilmInListExtended(BaseOrjsonModel):
+    id: str
+    title: str
+    rating: float
+    description: str
+
+
 class GenreDetail(BaseOrjsonModel):
     id: str
     name: str
