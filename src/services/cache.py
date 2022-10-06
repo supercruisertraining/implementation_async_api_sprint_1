@@ -1,3 +1,4 @@
+# coding=utf-8
 import json
 
 from fastapi import Depends
@@ -43,7 +44,7 @@ class RedisCache(AbstractCache):
         self.redis.set(key, value, expire=self.FILM_CACHE_EXPIRE_IN_SECONDS)
 
     def cook_cache_key(self, *args):
-        return "::".join(args)
+        return "::".join(map(str, args))
 
 
 @lru_cache

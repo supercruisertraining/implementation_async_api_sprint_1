@@ -85,7 +85,7 @@ class FilmService:
                                         if sort_rule["field"] in ("title",)
                                         else sort_rule["field"]:
                                             {"order": "desc" if sort_rule["desc"] else "asc"}}})
-        film_list = self.cache.get_from_cache(self.cache.cook_cache_key(self.name, page_number, page_size,
+        film_list = await self.cache.get_from_cache(self.cache.cook_cache_key(self.name, page_number, page_size,
                                                                         sort_rule, filters_should))
         if not film_list:
             film_list = await self.storage.get_object_list(index=self.name, query=json.dumps(query_body))
