@@ -15,7 +15,7 @@ async def get_person_by_id(person_uuid: str, person_service: PersonService = Dep
     person_info = await person_service.get_person_by_id(person_uuid)
     if not person_info:
         raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail=PERSON_NOT_FOUND_MESSAGE)
-    return Person(id=person_info.id, name=person_info.full_name)
+    return Person(id=person_info.id, full_name=person_info.full_name)
 
 
 @router.get("/", response_model=List[Person], summary="Get persons list")

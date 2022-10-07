@@ -18,7 +18,7 @@ class PersonService:
         self.storage = storage
         self.cache = cache
 
-    async def get_genre_by_id(self, person_id: str) -> Optional[Person]:
+    async def get_person_by_id(self, person_id: str) -> Optional[Person]:
         person_data = await self.cache.get_from_cache(person_id)
         if not person_data:
             person_data = await self.storage.get_object_by_id(index=self.name, object_id=person_id)
@@ -50,6 +50,6 @@ class PersonService:
 
 
 @lru_cache
-def get_genre_service(storage: AbstractStorage = Depends(get_storage),
-                      cache: AbstractCache = Depends(get_cache)) -> PersonService:
+def get_person_service(storage: AbstractStorage = Depends(get_storage),
+                       cache: AbstractCache = Depends(get_cache)) -> PersonService:
     return PersonService(storage=storage, cache=cache)
