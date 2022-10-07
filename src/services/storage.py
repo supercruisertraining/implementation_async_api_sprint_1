@@ -15,7 +15,7 @@ class AbstractStorage(ABC):
         pass
 
     @abstractmethod
-    async def get_object_list(self, index: str, query: str) -> Optional[List[dict]]:
+    async def get_object_list(self, index: str, query: Optional[str] = None) -> Optional[List[dict]]:
         pass
 
 
@@ -31,7 +31,7 @@ class ElasticSearchStorage(AbstractStorage):
             return None
         return data["_source"]
 
-    async def get_object_list(self, index: str, query: str) -> Optional[List[dict]]:
+    async def get_object_list(self, index: str, query: Optional[str] = None) -> Optional[List[dict]]:
         try:
             data = await self.elastic.search(index=index, body=query)
         except NotFoundError:
