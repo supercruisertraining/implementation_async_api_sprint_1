@@ -7,13 +7,14 @@ from fastapi import Depends
 from services.cache import AbstractCache, get_cache
 from services.storage import AbstractStorage, get_storage
 from models.genre import GenreDetail, Genre
+from core.config import config
 
 
 GENRE_CACHE_EXPIRE_IN_SECONDS = 60 * 5
 
 
 class GenreService:
-    name = "genres"
+    name = config.es_genres_index
 
     def __init__(self, cache: AbstractCache, storage: AbstractStorage):
         self.storage = storage

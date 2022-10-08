@@ -7,12 +7,13 @@ from fastapi import Depends
 from models.person import Person
 from services.cache import AbstractCache, get_cache
 from services.storage import AbstractStorage, get_storage
+from core.config import config
 
 PERSON_CACHE_EXPIRE_IN_SECONDS = 60 * 5
 
 
 class PersonService:
-    name = "persons"
+    name = config.es_persons_index
 
     def __init__(self, cache: AbstractCache, storage: AbstractStorage):
         self.storage = storage

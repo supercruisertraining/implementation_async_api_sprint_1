@@ -16,3 +16,9 @@ class Config(BaseSettings):
     REDIS_PORT: int = 6379
     ELASTIC_HOST: str = "localhost"
     ELASTIC_PORT: int = 9200
+    es_movies_index: str = "movies"
+    es_persons_index: str = "persons"
+    es_genres_index: str = "genres"
+
+
+config = Config()

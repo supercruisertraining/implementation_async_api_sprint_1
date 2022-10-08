@@ -2,17 +2,17 @@ import json
 from functools import lru_cache
 from typing import Optional, List
 
-from elasticsearch import NotFoundError
 from fastapi import Depends
 
 from models.film import Film
 from services.cache import AbstractCache, get_cache
 from services.storage import AbstractStorage, get_storage
+from core.config import config
 
 
 class FilmService:
 
-    name = "movies"
+    name = config.es_movies_index
 
     def __init__(self, cache: AbstractCache, storage: AbstractStorage):
         self.cache = cache

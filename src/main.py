@@ -5,10 +5,9 @@ from fastapi import FastAPI
 from fastapi.responses import ORJSONResponse
 
 from api.v1 import films, genres, persons
-from core.config import Config
+from core.config import config
 from db import elastic, redis
 
-config = Config()
 app = FastAPI(
     title=config.PROJECT_NAME,
     docs_url='/api/openapi',
