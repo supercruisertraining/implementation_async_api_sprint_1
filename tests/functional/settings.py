@@ -2,6 +2,7 @@ from pydantic import BaseSettings, RedisDsn
 
 
 class TestSettings(BaseSettings):
+    api_base_url = "http://127.0.0.1:8000"
     es_host_url: str = "http://127.0.0.1:9200"
     redis_dsn: RedisDsn = "redis://user:pass@127.0.0.1:6379/2"
 
