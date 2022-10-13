@@ -11,8 +11,24 @@ from tests.functional.settings import test_settings
 from tests.functional.utils.helpers import create_es_index
 
 
+@pytest.mark.parametrize("query_data, expected_answer",
+                         [
+                             (
+                                     {"query": "курцин"},
+                                     {"length": 1, "title": "Меч"}
+                             ),
+                             (
+                                     {"query": "мяч"},
+                                     {"length": 1, "title": "Меч"}
+                             ),
+                             (
+                                     {"query": "жексон", "page[size]": 100, "page[number]": 1},
+                                     {"length": 60, "title": "Просто Джексон"}
+                             )
+                         ]
+                         )
 @pytest.mark.asyncio
-async def test_search():
+async def test_search(query_data, expected_answer):
     elastic = AsyncElasticsearch(hosts=test_settings.es_host_url, validate_cert=False, use_ssl=False)
 
     # Test Index Created
@@ -72,19 +88,17 @@ async def test_search():
     # Тестирование
     session = aiohttp.ClientSession()
     url = urljoin(test_settings.api_base_url, "/api/v1/films/search/")
-    query_data = {"query": "курцин"}
     async with session.get(url, params=query_data) as response:
         body = await response.json()
         headers = response.headers
         status = response.status
 
     await session.close()
-
-    assert len(body) == 1
-    assert body[0]["title"] == "Меч"
-
     # Удаляем созданный тестовый индекс
     elastic = AsyncElasticsearch(hosts=test_settings.es_host_url, validate_cert=False, use_ssl=False)
     await elastic.indices.delete(index=test_settings.es_movies_index)
     await elastic.close()
+
+    assert len(body) == expected_answer["length"]
+    assert body[0]["title"] == expected_answer["title"]
 
