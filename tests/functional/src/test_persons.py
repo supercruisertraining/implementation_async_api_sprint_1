@@ -20,7 +20,7 @@ async def test_persons_endpoint(push_persons_data):
 @pytest.mark.asyncio
 async def test_person_detail_endpoint(push_persons_data):
     session = aiohttp.ClientSession()
-    url = urljoin(test_settings.api_base_url, "/api/v1/persons/25a35990-2d50-4147-9d2f-420214138700")
+    url = urljoin(test_settings.api_base_url, "/api/v1/persons/15a35990-2d50-4147-9d2f-420214138700")
     async with session.get(url) as response:
         body = await response.json()
 

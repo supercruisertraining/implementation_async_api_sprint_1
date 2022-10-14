@@ -1,0 +1,46 @@
+version: "3.9"
+services:
+  api:
+    image: app
+    environment:
+      - DB_NAME=${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+      - REDIS_HOST=${REDIS_HOST}
+      - ELASTIC_HOST=${ELASTIC_HOST}
+      - ES_API_PATH=${ES_API_PATH}
+      - ES_MOVIES_INDEX=${ES_MOVIES_INDEX}
+      - ES_GENRES_INDEX=${ES_GENRES_INDEX}
+      - ES_PERSONS_INDEX=${ES_PERSONS_INDEX}
+    working_dir: /app/src
+    depends_on:
+      - redis
+    command: gunicorn --workers 4 --worker-class uvicorn.workers.UvicornWorker --bind 0.0.0.0:8000 main:app
+
+  redis:
+    image: "redis:alpine"
+    ports:
+      - "6379:6379"
+
+  nginx:
+    image: nginx
+    ports:
+      - "0.0.0.0:80:80"
+    volumes:
+      - ./nginx/simple_config.conf:/etc/nginx/conf.d/site.conf:ro
+
+  tests:
+    image: app
+    environment:
+      - ELASTIC_HOST=${ELASTIC_HOST}
+      - ES_HOST_URL=${ES_API_PATH}
+      - ES_MOVIES_INDEX=${ES_MOVIES_INDEX}
+      - ES_GENRES_INDEX=${ES_GENRES_INDEX}
+      - ES_PERSONS_INDEX=${ES_PERSONS_INDEX}
+    working_dir: /app/src
+    depends_on:
+      - api
+      - nginx
+    command: pytest ./tests/functional/src/
