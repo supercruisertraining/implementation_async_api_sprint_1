@@ -7,3 +7,4 @@ async def create_es_index(elastic: AsyncElasticsearch, index_name: str, mapping_
     async with aiofiles.open(mapping_file, "r") as r_f:
         index_def = json.loads(await r_f.read())
     await elastic.indices.create(index=index_name, body=index_def)
+    print("Hey")
