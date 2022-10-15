@@ -5,6 +5,7 @@ class TestSettings(BaseSettings):
     api_base_url = "http://127.0.0.1:8000"
     es_host_url: str = "http://127.0.0.1:9200"
     redis_dsn: RedisDsn = "redis://user:pass@127.0.0.1:6379/2"
+    redis_host: str = "127.0.0.1"
 
     es_movies_index: str = "test_movies"
     es_persons_index: str = "test_persons"

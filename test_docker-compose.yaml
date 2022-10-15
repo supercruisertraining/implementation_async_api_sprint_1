@@ -39,11 +39,16 @@ services:
       - API_BASE_URL=${API_BASE_URL}
       - ELASTIC_HOST=${ELASTIC_HOST}
       - ES_HOST_URL=${ES_API_PATH}
+      - REDIS_HOST=${REDIS_HOST}
       - ES_MOVIES_INDEX=${ES_MOVIES_INDEX}
       - ES_GENRES_INDEX=${ES_GENRES_INDEX}
       - ES_PERSONS_INDEX=${ES_PERSONS_INDEX}
+      - PYTHONPATH=/app
     working_dir: /app
     depends_on:
       - api
       - nginx
-    command: pytest /app/tests/functional/src/
+    command: >
+      sh -c "python3 tests/functional/utils/wait_for_es.py \
+            && python3 tests/functional/utils/wait_for_redis.py \
+            && pytest tests/functional/src"
