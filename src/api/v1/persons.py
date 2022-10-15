@@ -21,8 +21,8 @@ async def get_person_by_id(person_uuid: str, person_service: PersonService = Dep
 @router.get("/", response_model=List[Person], summary="Get persons list")
 async def get_person_list(person_service: PersonService = Depends(get_person_service),
                           sort: str = Query(default=None),
-                          page_number: int = Query(default=1, alias="page[number]"),
-                          page_size: int = Query(default=50, alias="page[size]"),
+                          page_number: int = Query(default=1, alias="page[number]", ge=1),
+                          page_size: int = Query(default=50, alias="page[size]", ge=1),
                           ):
     sort_rule = None
     if sort:
