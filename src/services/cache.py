@@ -41,7 +41,7 @@ class RedisCache(AbstractCache):
             return None
 
     async def put_to_cache(self, key: str, value: str):
-        await self.redis.set(key, value, expire=self.FILM_CACHE_EXPIRE_IN_SECONDS)
+        await self.redis.set(key, value, ex=self.FILM_CACHE_EXPIRE_IN_SECONDS)
 
     def cook_cache_key(self, *args):
         return "::".join(map(str, args))

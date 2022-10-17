@@ -6,6 +6,7 @@ from fastapi import APIRouter, Depends, HTTPException, Query
 from services.person import PersonService, get_person_service
 from api.v1.schemas import Person
 from api.v1.messages import PERSON_NOT_FOUND_MESSAGE
+from api.v1.utils import paging_parameters
 
 router = APIRouter()
 
@@ -21,8 +22,7 @@ async def get_person_by_id(person_uuid: str, person_service: PersonService = Dep
 @router.get("/", response_model=List[Person], summary="Get persons list")
 async def get_person_list(person_service: PersonService = Depends(get_person_service),
                           sort: str = Query(default=None),
-                          page_number: int = Query(default=1, alias="page[number]", ge=1),
-                          page_size: int = Query(default=50, alias="page[size]", ge=1),
+                          paginated_params=Depends(paging_parameters),
                           ):
     sort_rule = None
     if sort:
@@ -30,7 +30,7 @@ async def get_person_list(person_service: PersonService = Depends(get_person_ser
             sort_rule = {"field": sort[1:], "desc": True}
         else:
             sort_rule = {"field": sort, "desc": False}
-    person_list = await person_service.get_persons_list(page_number=page_number,
-                                                        page_size=page_size,
+    person_list = await person_service.get_persons_list(page_number=paginated_params.page_number,
+                                                        page_size=paginated_params.page_size,
                                                         sort_rule=sort_rule)
     return list(map(lambda x: Person(id=x.id, full_name=x.full_name), person_list))

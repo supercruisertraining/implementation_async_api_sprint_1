@@ -6,6 +6,7 @@ from fastapi import APIRouter, Depends, HTTPException, Query
 from services.film import FilmService, get_film_service
 from api.v1.schemas import FilmDetail, FilmInList, FilmInListExtended
 from api.v1.messages import FILM_NOT_FOUND_MESSAGE
+from api.v1.utils import paging_parameters
 
 router = APIRouter()
 
@@ -20,8 +21,7 @@ async def film_details(film_uuid: str, film_service: FilmService = Depends(get_f
 
 @router.get("/", response_model=list[FilmInList], summary="Get films list")
 async def get_film_list(film_service: FilmService = Depends(get_film_service),
-                        page_number: int = Query(default=1, alias="page[number]", ge=1),
-                        page_size: int = Query(default=50, alias="page[size]", ge=1),
+                        paginated_params=Depends(paging_parameters),
                         filter_genre: Union[list[str], None] = Query(default=None, alias="filter[genre]"),
                         sort: str = Query(default=None)):
     sort_rule = None
@@ -33,17 +33,20 @@ async def get_film_list(film_service: FilmService = Depends(get_film_service),
     filters_should = None
     if filter_genre:
         filters_should = {"genres": filter_genre}
-    films = await film_service.get_film_list(page_size=page_size, page_number=page_number,
-                                             sort_rule=sort_rule,  filters_should=filters_should)
+    films = await film_service.get_film_list(page_size=paginated_params.page_size,
+                                             page_number=paginated_params.page_number,
+                                             sort_rule=sort_rule,
+                                             filters_should=filters_should)
     return list(map(lambda x: FilmInList(id=x.id, title=x.title, rating=x.rating), films))
 
 
 @router.get("/search/", response_model=list[FilmInListExtended], summary="Search films by query")
 async def search_in_films(query: str,
                           film_service: FilmService = Depends(get_film_service),
-                          page_number: int = Query(default=1, alias="page[number]", ge=1),
-                          page_size: int = Query(default=50, alias="page[size]", ge=1),
+                          paginated_params=Depends(paging_parameters),
                           ):
-    films = await film_service.search_films(search_query=query, page_size=page_size, page_number=page_number)
+    films = await film_service.search_films(search_query=query,
+                                            page_size=paginated_params.page_size,
+                                            page_number=paginated_params.page_number)
     return list(map(lambda x: FilmInListExtended(id=x.id, title=x.title, rating=x.rating, description=x.description),
                     films))
