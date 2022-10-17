@@ -89,12 +89,10 @@ class FilmService:
                                                                         sort_rule, filters_should))
         if not film_list:
             film_list = await self.storage.get_object_list(index=self.name, query=json.dumps(query_body))
-            if film_list:
-                await self.cache.put_to_cache(self.cache.cook_cache_key(self.name, page_number, page_size,
-                                                                        sort_rule, filters_should),
-                                              value=json.dumps(film_list))
-            else:
+            if not film_list:
                 return []
+            key = self.cache.cook_cache_key(self.name, page_number, page_size, sort_rule, filters_should)
+            await self.cache.put_to_cache(key, value=json.dumps(film_list))
         return list(map(lambda x: Film(**x), film_list))
 
 
