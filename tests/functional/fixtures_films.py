@@ -26,40 +26,15 @@ async def create_movies_index(es_client):
 
 
 @pytest.fixture(scope="module")
-async def push_movies_data(create_movies_index):
+async def push_movies_data(create_movies_index, get_test_data):
     elastic = create_movies_index
-    es_data = [{
-        'id': str(uuid.uuid4()),
-        'rating': 6,
-        'genres': [{'id': '999', 'name': 'Боевик'}, {'id': '777', 'name': 'Детектив'}],
-        'title': 'Просто Джексон',
-        'description': 'Продолжение сериала "Улицы разбитых фонарей". Главный герой - Джексон',
-        'creation_date': "2019-02-25",
-        'directors': [{'id': '333', 'full_name': 'Леонид Пляскин'}],
-        'actors': [
-            {'id': '111', 'full_name': 'Дмитрий Быковский'},
-            {'id': '222', 'full_name': 'Андрей Горбачев'}
-        ],
-        'writers': [
-            {'id': '333', 'full_name': 'Леонид Пляскин'},
-        ],
-    } for _ in range(60)]
-    es_data.append({
-        'id': '47a18637-677d-4a0b-b0f8-051b11bb0adc',
-        'rating': 10,
-        'genres': [{'id': '999', 'name': 'Боевик'}, {'id': '777', 'name': 'Детектив'}],
-        'title': 'Меч',
-        'description': 'Эдуард Флёров и Роман Курцын в главной роли',
-        'creation_date': "2022-02-25",
-        'directors': [{'id': '121', 'full_name': 'Илья Куликов'}],
-        'actors': [
-            {'id': '131', 'full_name': 'Роман Курцын'},
-            {'id': '141', 'full_name': 'Эдуард Флёров'},
-        ],
-        'writers': [
-            {'id': '121', 'full_name': 'Илья Куликов'},
-        ]
-    })
+    test_data = get_test_data["movies"].copy()
+    es_data = []
+    for _ in range(60):
+        cur_film = test_data["movie_2"].copy()
+        cur_film["id"] = str(uuid.uuid4())
+        es_data.append(cur_film)
+    es_data.append(test_data["movie_1"])
     bulk_query = []
     for row in es_data:
         bulk_query.extend([

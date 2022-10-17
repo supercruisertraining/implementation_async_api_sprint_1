@@ -10,20 +10,21 @@ from tests.functional.settings import test_settings
                          [
                              (
                                      {"query": "курцин"},
-                                     {"length": 1, "title": "Меч"}
+                                     {"length": 1, "movie_key": "movie_1"}
                              ),
                              (
                                      {"query": "мяч"},
-                                     {"length": 1, "title": "Меч"}
+                                     {"length": 1, "movie_key": "movie_1"}
                              ),
                              (
                                      {"query": "жексон", "page[size]": 100, "page[number]": 1},
-                                     {"length": 60, "title": "Просто Джексон"}
+                                     {"length": 60, "movie_key": "movie_2"}
                              )
                          ]
                          )
 @pytest.mark.asyncio
-async def test_search_endpoint(push_movies_data, query_data, expected_answer):
+async def test_search_endpoint(push_movies_data, get_test_data, query_data, expected_answer):
+    movies = get_test_data["movies"].copy()
     session = aiohttp.ClientSession()
     url = urljoin(test_settings.api_base_url, "/api/v1/films/search/")
     async with session.get(url, params=query_data) as response:
@@ -32,20 +33,21 @@ async def test_search_endpoint(push_movies_data, query_data, expected_answer):
     await session.close()
 
     assert len(body) == expected_answer["length"]
-    assert body[0]["title"] == expected_answer["title"]
+    assert body[0]["title"] == movies[expected_answer["movie_key"]]["title"]
 
 
 @pytest.mark.asyncio
-async def test_film_endpoint(push_movies_data):
+async def test_film_endpoint(push_movies_data, get_test_data):
+    movie_1 = get_test_data["movies"]["movie_1"].copy()
     session = aiohttp.ClientSession()
-    url = urljoin(test_settings.api_base_url, "/api/v1/films/47a18637-677d-4a0b-b0f8-051b11bb0adc/")
+    url = urljoin(test_settings.api_base_url, f"/api/v1/films/{movie_1['id']}/")
     async with session.get(url) as response:
         body = await response.json()
 
     await session.close()
 
-    assert body["id"] == "47a18637-677d-4a0b-b0f8-051b11bb0adc"
-    assert body["title"] == "Меч"
+    assert body["id"] == movie_1["id"]
+    assert body["title"] == movie_1["title"]
 
 
 @pytest.mark.asyncio

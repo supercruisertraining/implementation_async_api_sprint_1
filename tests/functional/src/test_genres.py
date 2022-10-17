@@ -18,11 +18,12 @@ async def test_genres_endpoint(push_genres_data):
 
 
 @pytest.mark.asyncio
-async def test_genre_detail_endpoint(push_genres_data):
+async def test_genre_detail_endpoint(push_genres_data, get_test_data):
+    genre_1 = get_test_data["genres"]["genre_1"].copy()
     session = aiohttp.ClientSession()
-    url = urljoin(test_settings.api_base_url, "/api/v1/genres/25a35990-2d50-4147-9d2f-420214138700")
+    url = urljoin(test_settings.api_base_url, f"/api/v1/genres/{genre_1['id']}")
     async with session.get(url) as response:
         body = await response.json()
 
     await session.close()
-    assert body["name"] == "Боевик"
+    assert body["name"] == genre_1["name"]

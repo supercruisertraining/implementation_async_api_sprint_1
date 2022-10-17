@@ -25,11 +25,10 @@ async def create_persons_index(es_client):
 
 
 @pytest.fixture(scope="module")
-async def push_persons_data(create_persons_index):
+async def push_persons_data(create_persons_index, get_test_data):
     elastic = create_persons_index
-    es_data = [{'id': '15a35990-2d50-4147-9d2f-420214138700', 'full_name': 'Роман Курцын'},
-               {'id': '20096d83-26c0-450d-be7a-f745bd23a44f', 'full_name': 'Эдуард Флёров'},
-               {'id': '972e565f-0126-4f24-961e-2572e4ebf006', 'full_name': 'Дмитрий Быковский'}]
+    test_data = get_test_data["persons"].copy()
+    es_data = [test_data["person_1"], test_data["person_2"], test_data["person_3"]]
     bulk_query = []
     for row in es_data:
         bulk_query.extend([

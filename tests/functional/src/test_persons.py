@@ -18,11 +18,12 @@ async def test_persons_endpoint(push_persons_data):
 
 
 @pytest.mark.asyncio
-async def test_person_detail_endpoint(push_persons_data):
+async def test_person_detail_endpoint(push_persons_data, get_test_data):
+    person_1 = get_test_data["persons"]["person_1"].copy()
     session = aiohttp.ClientSession()
-    url = urljoin(test_settings.api_base_url, "/api/v1/persons/15a35990-2d50-4147-9d2f-420214138700")
+    url = urljoin(test_settings.api_base_url, f"/api/v1/persons/{person_1['id']}")
     async with session.get(url) as response:
         body = await response.json()
 
     await session.close()
-    assert body["full_name"] == "Роман Курцын"
+    assert body["full_name"] == person_1["full_name"]

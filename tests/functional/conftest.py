@@ -1,3 +1,6 @@
+import os
+import json
+
 import pytest
 from elasticsearch import AsyncElasticsearch
 
@@ -15,3 +18,9 @@ pytest_plugins = [
     "tests.functional.fixtures_genres",
     "tests.functional.fixtures_persons",
 ]
+
+
+@pytest.fixture(scope='module')
+def get_test_data():
+    with open(os.path.join(os.path.dirname(__file__), "test_data.json"), "r") as r_f:
+        return json.load(r_f)

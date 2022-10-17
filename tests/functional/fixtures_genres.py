@@ -25,11 +25,10 @@ async def create_genres_index(es_client):
 
 
 @pytest.fixture(scope="module")
-async def push_genres_data(create_genres_index):
+async def push_genres_data(create_genres_index, get_test_data):
     elastic = create_genres_index
-    es_data = [{'id': '25a35990-2d50-4147-9d2f-420214138700', 'name': 'Боевик', 'description': 'Стрелялки пулялки'},
-               {'id': '10096d83-26c0-450d-be7a-f745bd23a44f', 'name': 'Детектив', 'description': 'Про полицейских'},
-               {'id': '872e565f-0126-4f24-961e-2572e4ebf006', 'name': 'Ужасы', 'description': 'Страшно'}]
+    test_data = get_test_data["genres"].copy()
+    es_data = [test_data["genre_1"], test_data["genre_2"], test_data["genre_3"]]
     bulk_query = []
     for row in es_data:
         bulk_query.extend([
