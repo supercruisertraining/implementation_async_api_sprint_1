@@ -1,5 +1,4 @@
 import datetime
-from typing import List
 
 from utils.schemas import BaseOrjsonModel
 
@@ -21,8 +20,8 @@ class Film(BaseOrjsonModel):
     rating: float
     creation_date: datetime.date
 
-    genres: List[GenreInFilm]
+    genres: list[GenreInFilm]
 
-    actors: List[PersonInFilm]
-    writers: List[PersonInFilm]
-    directors: List[PersonInFilm]
+    actors: list[PersonInFilm]
+    writers: list[PersonInFilm]
+    directors: list[PersonInFilm]

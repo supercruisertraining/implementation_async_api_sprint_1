@@ -1,5 +1,3 @@
-from pydantic import BaseModel
-from typing import List
 import datetime
 
 from utils.schemas import BaseOrjsonModel
@@ -21,11 +19,11 @@ class FilmDetail(BaseOrjsonModel):
     rating: float
     description: str
     creation_date: datetime.date
-    genres: List[GenreInFilmDetail]
+    genres: list[GenreInFilmDetail]
 
-    actors: List[PersonInFilmDetail]
-    writers: List[PersonInFilmDetail]
-    directors: List[PersonInFilmDetail]
+    actors: list[PersonInFilmDetail]
+    writers: list[PersonInFilmDetail]
+    directors: list[PersonInFilmDetail]
 
 
 class FilmInList(BaseOrjsonModel):

@@ -1,5 +1,5 @@
 from http import HTTPStatus
-from typing import List, Union
+from typing import Union
 
 from fastapi import APIRouter, Depends, HTTPException, Query
 
@@ -18,11 +18,11 @@ async def film_details(film_uuid: str, film_service: FilmService = Depends(get_f
     return FilmDetail(**film.dict())
 
 
-@router.get("/", response_model=List[FilmInList], summary="Get films list")
+@router.get("/", response_model=list[FilmInList], summary="Get films list")
 async def get_film_list(film_service: FilmService = Depends(get_film_service),
                         page_number: int = Query(default=1, alias="page[number]", ge=1),
                         page_size: int = Query(default=50, alias="page[size]", ge=1),
-                        filter_genre: Union[List[str], None] = Query(default=None, alias="filter[genre]"),
+                        filter_genre: Union[list[str], None] = Query(default=None, alias="filter[genre]"),
                         sort: str = Query(default=None)):
     sort_rule = None
     if sort:
@@ -38,7 +38,7 @@ async def get_film_list(film_service: FilmService = Depends(get_film_service),
     return list(map(lambda x: FilmInList(id=x.id, title=x.title, rating=x.rating), films))
 
 
-@router.get("/search/", response_model=List[FilmInListExtended], summary="Search films by query")
+@router.get("/search/", response_model=list[FilmInListExtended], summary="Search films by query")
 async def search_in_films(query: str,
                           film_service: FilmService = Depends(get_film_service),
                           page_number: int = Query(default=1, alias="page[number]", ge=1),

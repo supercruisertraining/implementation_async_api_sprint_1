@@ -1,5 +1,5 @@
 import json
-from typing import Optional, List
+from typing import Optional
 from functools import lru_cache
 
 from fastapi import Depends
@@ -30,7 +30,7 @@ class GenreService:
                 return None
         return GenreDetail(**genre_data)
 
-    async def get_genre_list(self) -> List[Genre]:
+    async def get_genre_list(self) -> list[Genre]:
         genres_list = await self.cache.get_from_cache(key=self.name)
         if not genres_list:
             genres_list = await self.storage.get_object_list(index=self.name)
