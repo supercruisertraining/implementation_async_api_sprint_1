@@ -11,6 +11,9 @@ services:
       - REDIS_HOST=${REDIS_HOST}
       - ELASTIC_HOST=${ELASTIC_HOST}
       - ES_API_PATH=${ES_API_PATH}
+      - JWT_SECRET=${JWT_SECRET}
+      - TEST=False
+      - CHECK_PERMISSION_URL=${CHECK_PERMISSION_URL}
     working_dir: /app/src
     depends_on:
       - redis

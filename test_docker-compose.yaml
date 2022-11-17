@@ -14,6 +14,7 @@ services:
       - ES_MOVIES_INDEX=${ES_MOVIES_INDEX}
       - ES_GENRES_INDEX=${ES_GENRES_INDEX}
       - ES_PERSONS_INDEX=${ES_PERSONS_INDEX}
+      - TEST=True
     working_dir: /app/src
     depends_on:
       - redis

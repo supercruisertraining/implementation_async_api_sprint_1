@@ -10,6 +10,7 @@ logging_config.dictConfig(LOGGING)
 
 
 class Config(BaseSettings):
+    TEST: bool = True
     BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     PROJECT_NAME: str = "movies"
     REDIS_HOST: str = "localhost"
@@ -19,6 +20,12 @@ class Config(BaseSettings):
     es_movies_index: str = "movies"
     es_persons_index: str = "persons"
     es_genres_index: str = "genres"
+
+    JWT_SECRET: str = "secret"
+    JWT_ALGORITHM: str = "HS256"
+
+    CHECK_PERMISSION_URL: str = "http://127.0.0.1:5000/admin/api/v1/check_permission"
+    MIN_ROLE: str = "lite"
 
 
 config = Config()

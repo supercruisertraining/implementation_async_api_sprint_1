@@ -7,12 +7,16 @@ from services.film import FilmService, get_film_service
 from api.v1.schemas import FilmDetail, FilmInList, FilmInListExtended
 from api.v1.messages import FILM_NOT_FOUND_MESSAGE
 from api.v1.utils import paging_parameters
+from utils.auth import PermissionChecker
+from core.config import config
 
 router = APIRouter()
 
 
-@router.get('/{film_uuid}', response_model=FilmDetail, summary="Get film detail info")
-async def film_details(film_uuid: str, film_service: FilmService = Depends(get_film_service)) -> FilmDetail:
+@router.get('/{film_uuid}', response_model=FilmDetail, summary="Get film detail info",
+            dependencies=[Depends(PermissionChecker(config.MIN_ROLE))])
+async def film_details(film_uuid: str,
+                       film_service: FilmService = Depends(get_film_service)) -> FilmDetail:
     film = await film_service.get_by_id(film_uuid)
     if not film:
         raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail=FILM_NOT_FOUND_MESSAGE)
