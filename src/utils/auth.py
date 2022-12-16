@@ -11,7 +11,7 @@ class PermissionChecker:
     def __init__(self, minimal_role: str):
         self.minimal_role = minimal_role
 
-    async def __call__(self, authorization: str = Header()):
+    async def __call__(self, authorization: str = Header("")):
         if config.TEST:
             return True
         if not authorization:
