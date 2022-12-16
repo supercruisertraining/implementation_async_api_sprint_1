@@ -22,6 +22,7 @@ jobs:
         pip install wemake-python-styleguide
         pip install flake8-html
         pip install mypy
+        pip install pytest
         pip install -r requirements.txt
 
     - name: Lint with wemake-python-styleguide
@@ -30,6 +31,9 @@ jobs:
     - name: Check with mypy
       run: |
         mypy src/
+    - name: Run unit test
+      run: |
+        pytest tests/unit
 
     - name: Send Telegram notification
       uses: appleboy/telegram-action@master
