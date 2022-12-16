@@ -1,12 +1,12 @@
 # coding=utf-8
 import json
-
-from fastapi import Depends
 from abc import ABC, abstractmethod
-from typing import Union, List, Optional
 from functools import lru_cache
+from typing import List, Optional, Union
 
 from aioredis import Redis
+from fastapi import Depends
+
 from db.redis import get_redis
 
 
@@ -50,4 +50,3 @@ class RedisCache(AbstractCache):
 @lru_cache
 def get_cache(redis: Redis = Depends(get_redis)) -> AbstractCache:
     return RedisCache(redis)
-
