@@ -27,5 +27,9 @@ class Config(BaseSettings):
     CHECK_PERMISSION_URL: str = "http://127.0.0.1:5000/admin/api/v1/check_permission"
     MIN_ROLE: str = "lite"
 
+    LOGSTASH_HOST: str = "localhost"
+    LOGSTASH_PORT: int = 5044
+    LOGSTASH_TAG: str = "fast-api-app"
+
 
 config = Config()

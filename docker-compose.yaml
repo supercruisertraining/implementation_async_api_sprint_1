@@ -14,6 +14,7 @@ services:
       - JWT_SECRET=${JWT_SECRET}
       - TEST=False
       - CHECK_PERMISSION_URL=${CHECK_PERMISSION_URL}
+      - LOGSTASH_HOST=${LOGSTASH_HOST}
     working_dir: /app/src
     depends_on:
       - redis
